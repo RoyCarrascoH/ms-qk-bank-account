@@ -11,14 +11,10 @@ import nttdata.bootcamp.quarkus.bankaccount.entity.BankAccount;
 import nttdata.bootcamp.quarkus.bankaccount.repository.BankAccountRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
@@ -65,7 +61,7 @@ public class BankAccountResourceTest {
     @Test
     public void testFindABankAccountExist() {
         List<BankAccount> bankAccounts = new ArrayList<>();
-        BankAccount bankAccount = new BankAccount(Long.valueOf("1"), "123456789", new Date(), "description", Double.parseDouble("1200"));
+        BankAccount bankAccount = new BankAccount(Long.valueOf("1"), "123456789", new Date(), "description", Double.parseDouble("1200"), "0");
         bankAccounts.add(bankAccount);
         Mockito.when(service.findById(bankAccounts.get(0).getIdBankAccount())).thenReturn(bankAccount);
         Mockito.when(bankAccountRepository.findById(bankAccounts.get(0).getIdBankAccount())).thenReturn(bankAccount);
@@ -84,7 +80,7 @@ public class BankAccountResourceTest {
     @Transactional
     public void testDeleteBankAccountNoExist() {
         List<BankAccount> clients = new ArrayList<>();
-        BankAccount bankAccount = new BankAccount(Long.valueOf("1"), "123456789", new Date(), "description", Double.parseDouble("1200"));
+        BankAccount bankAccount = new BankAccount(Long.valueOf("1"), "123456789", new Date(), "description", Double.parseDouble("1200"), "0");
         clients.add(bankAccount);
         Mockito.when(service.findById(clients.get(0).getIdBankAccount())).thenReturn(bankAccount);
         Mockito.when(bankAccountRepository.findById(clients.get(0).getIdBankAccount())).thenReturn(bankAccount);

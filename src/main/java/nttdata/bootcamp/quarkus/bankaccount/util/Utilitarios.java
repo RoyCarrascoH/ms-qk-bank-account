@@ -12,6 +12,7 @@ public class Utilitarios {
         entity.setOpeningDate(bankAccount.getOpeningDate());
         entity.setDescription(bankAccount.getDescription());
         entity.setAmount(bankAccount.getAmount());
+        entity.setMainAccount(bankAccount.getMainAccount());
         return entity;
     }
 

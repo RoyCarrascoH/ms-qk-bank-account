@@ -29,5 +29,6 @@ public class BankAccount extends PanacheEntityBase {
     private Date openingDate;
     private String description;
     private Double amount;
+    private String mainAccount;
 
 }
