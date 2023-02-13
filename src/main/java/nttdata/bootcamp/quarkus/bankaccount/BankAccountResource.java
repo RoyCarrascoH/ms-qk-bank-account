@@ -10,6 +10,8 @@ import nttdata.bootcamp.quarkus.bankaccount.dto.BankAccountResponse;
 import nttdata.bootcamp.quarkus.bankaccount.dto.ResponseBase;
 import nttdata.bootcamp.quarkus.bankaccount.entity.BankAccount;
 import nttdata.bootcamp.quarkus.bankaccount.util.Utilitarios;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class BankAccountResource {
     private BankAccountService service;
 
     @GET
+    @Timeout(180)
     public BankAccountResponse getBankAccounts() {
         BankAccountResponse bankAccountsResponse = new BankAccountResponse();
         List<BankAccount> bankAccounts = service.listAll();
@@ -46,6 +49,7 @@ public class BankAccountResource {
 
     @GET
     @Path("{idBankAccount}")
+    @Retry(maxRetries = 4)
     public BankAccount viewBankAccountDetails(@PathParam("idBankAccount") Long idBankAccount) {
         BankAccount entity = service.findById(idBankAccount);
         if (entity == null) {
