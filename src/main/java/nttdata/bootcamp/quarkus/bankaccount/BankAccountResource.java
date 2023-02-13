@@ -6,6 +6,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import nttdata.bootcamp.quarkus.bankaccount.application.BankAccountService;
+import nttdata.bootcamp.quarkus.bankaccount.dto.BankAccountResponse;
+import nttdata.bootcamp.quarkus.bankaccount.dto.ResponseBase;
 import nttdata.bootcamp.quarkus.bankaccount.entity.BankAccount;
 import nttdata.bootcamp.quarkus.bankaccount.util.Utilitarios;
 import org.jboss.logging.Logger;
@@ -23,8 +25,23 @@ public class BankAccountResource {
     private BankAccountService service;
 
     @GET
-    public List<BankAccount> getBankAccounts() {
-        return service.listAll();
+    public BankAccountResponse getBankAccounts() {
+        BankAccountResponse bankAccountsResponse = new BankAccountResponse();
+        List<BankAccount> bankAccounts = service.listAll();
+        if (bankAccounts == null) {
+            bankAccountsResponse.setCodigoRespuesta(2);
+            bankAccountsResponse.setMensajeRespuesta("Respuesta nula");
+            bankAccountsResponse.setBankAccounts(null);
+        } else if (bankAccounts.size() == 0) {
+            bankAccountsResponse.setCodigoRespuesta(1);
+            bankAccountsResponse.setMensajeRespuesta("No existen cuentas bancarias");
+            bankAccountsResponse.setBankAccounts(bankAccounts);
+        } else {
+            bankAccountsResponse.setCodigoRespuesta(0);
+            bankAccountsResponse.setMensajeRespuesta("Respuesta Exitosa");
+            bankAccountsResponse.setBankAccounts(bankAccounts);
+        }
+        return bankAccountsResponse;
     }
 
     @GET
@@ -59,20 +76,26 @@ public class BankAccountResource {
             throw new WebApplicationException("BankAccount with id of " + idBankAccount + " does not exist.", 404);
         }
         entity = Utilitarios.saveBankAccount(entity, bankAccount);
-        service.update(idBankAccount,entity);
+        service.update(idBankAccount, entity);
         return entity;
     }
 
     @DELETE
     @Path("{idBankAccount}")
     @Transactional
-    public Response delete(@PathParam("idBankAccount") Long idBankAccount) {
+    public ResponseBase delete(@PathParam("idBankAccount") Long idBankAccount) {
+        ResponseBase response = new ResponseBase();
         BankAccount entity = service.findById(idBankAccount);
         if (entity == null) {
+            response.setCodigoRespuesta(1);
+            response.setMensajeRespuesta("Id de BankAccount no existe");
             throw new WebApplicationException("BankAccount with id of " + idBankAccount + " does not exist.", 404);
+        } else {
+            response.setCodigoRespuesta(0);
+            response.setMensajeRespuesta("Eliminacion exitosa de BankAccount id = " + idBankAccount);
+            service.delete(entity.getIdBankAccount());
         }
-        service.delete(entity.getIdBankAccount());
-        return Response.status(200).build();
+        return response;
     }
 
 }
