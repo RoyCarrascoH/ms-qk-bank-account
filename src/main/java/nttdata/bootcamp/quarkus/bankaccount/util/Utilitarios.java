@@ -16,4 +16,14 @@ public class Utilitarios {
         return entity;
     }
 
+    public static BankAccount saveUpdateMainAccount(BankAccount entity, String mainAccount) {
+
+        entity.setNumberAccount(entity.getNumberAccount());
+        entity.setOpeningDate(entity.getOpeningDate());
+        entity.setDescription(entity.getDescription());
+        entity.setAmount(entity.getAmount());
+        entity.setMainAccount(mainAccount);
+        return entity;
+    }
+
 }

@@ -102,4 +102,17 @@ public class BankAccountResource {
         return response;
     }
 
+    @PUT
+    @Path("/updateMainAccount/{idBankAccount}/mainAccount/{mainAccount}")
+    @Transactional
+    public BankAccount updateMainAccount(@PathParam("idBankAccount") Long idBankAccount, @PathParam("mainAccount") String mainAccount) {
+        BankAccount entity = service.findById(idBankAccount);
+        if (entity == null) {
+            throw new WebApplicationException("BankAccount with id of " + idBankAccount + " does not exist.", 404);
+        }
+        entity = Utilitarios.saveUpdateMainAccount(entity, mainAccount);
+        service.update(idBankAccount, entity);
+        return entity;
+    }
+
 }
